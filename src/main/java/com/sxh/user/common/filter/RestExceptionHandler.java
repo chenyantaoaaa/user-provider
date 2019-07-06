@@ -67,30 +67,4 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.ok(new ResponseJson(2001, msg));
     }
 
-    /**
-     * 参数异常
-     *
-     */
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ResponseJson> notFount(ConstraintViolationException e) {
-        String msg="";
-        for (ConstraintViolation<?> constraintViolation : e.getConstraintViolations()) {
-            msg+=constraintViolation.getMessage()+" ";
-        }
-        return ResponseEntity.ok(new ResponseJson(2001, msg));
-    }
-
-    /**
-     * 参数异常
-     *
-     */
-    @ExceptionHandler(value = { MethodArgumentNotValidException.class })
-    public ResponseEntity<ResponseJson> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        String msg="";
-        BindingResult result = e.getBindingResult();
-        for (FieldError fieldError : result.getFieldErrors()) {
-            msg+=fieldError.getDefaultMessage()+"";
-        }
-        return ResponseEntity.ok(new ResponseJson(2001, msg));
-    }
 }
