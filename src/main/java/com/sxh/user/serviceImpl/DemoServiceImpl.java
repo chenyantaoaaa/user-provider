@@ -1,5 +1,6 @@
 package com.sxh.user.serviceImpl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sxh.user.mapper.UserMapper;
 import com.sxh.user.model.User;
 import com.sxh.user.service.DemoService;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
  * @create 2019-07-01 17:19
  **/
 @Service
-public class DemoServiceImpl implements DemoService {
+public class DemoServiceImpl extends ServiceImpl<UserMapper,User> implements DemoService  {
     @Autowired
     private UserMapper userMapper;
 

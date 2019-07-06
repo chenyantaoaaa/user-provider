@@ -9,10 +9,16 @@ import org.slf4j.MDC;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 
 /**
@@ -57,6 +63,33 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         String msg=ex.getMessage();
         if(msg!=null&&msg.indexOf("MySQLSyntaxErrorException")!=-1){
         	msg="sql解析异常";
+        }
+        return ResponseEntity.ok(new ResponseJson(2001, msg));
+    }
+
+    /**
+     * 参数异常
+     *
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ResponseJson> notFount(ConstraintViolationException e) {
+        String msg="";
+        for (ConstraintViolation<?> constraintViolation : e.getConstraintViolations()) {
+            msg+=constraintViolation.getMessage()+" ";
+        }
+        return ResponseEntity.ok(new ResponseJson(2001, msg));
+    }
+
+    /**
+     * 参数异常
+     *
+     */
+    @ExceptionHandler(value = { MethodArgumentNotValidException.class })
+    public ResponseEntity<ResponseJson> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        String msg="";
+        BindingResult result = e.getBindingResult();
+        for (FieldError fieldError : result.getFieldErrors()) {
+            msg+=fieldError.getDefaultMessage()+"";
         }
         return ResponseEntity.ok(new ResponseJson(2001, msg));
     }
